@@ -74,8 +74,8 @@ spec:
           env:
             - name: MONGO_SIDECAR_POD_LABELS
               value: "role=mongo,environment=test"
-            - name: CONFIG_SVR
-              value: "true"
+            - name: MONGODB_DATABASE
+              value: "admin"
   volumeClaimTemplates:
   - metadata:
       name: mongo-persistent-storage
