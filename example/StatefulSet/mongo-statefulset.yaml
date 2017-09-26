@@ -37,7 +37,6 @@ spec:
       labels:
         role: mongo
         environment: test
-        replicaset: rs0
     spec:
       terminationGracePeriodSeconds: 10
       volumes:
