@@ -43,8 +43,7 @@ spec:
       volumes:
         - name: secrets-volume
           secret:
-            secretName: shared-mongodb-data
-            defaultMode: 256
+            secretName: mongo-secret-data          
       containers:
         - name: "mongodb-container"
           image: mongo
@@ -52,15 +51,15 @@ spec:
             - mongod
             - "--replSet"
             - rs0
-            - "--auth"
-            - "--clusterAuthMode"
-            - "keyFile"
-            - "--keyFile"
-            - "/etc/secrets-volume/internal-auth-mongodb-keyfile"
-            - "--setParameter"
-            - "authenticationMechanisms=SCRAM-SHA-1"
             - "--smallfiles"
             - "--noprealloc"
+            - "--sslMode"
+            - "requireSSL"
+            - "--sslPEMKeyFile"
+            - "/etc/secrets-volume/mongodb.pem"
+            - "--sslAllowConnectionsWithoutCertificates"
+            - "--sslAllowInvalidCertificates"
+            - "--sslAllowInvalidHostnames"
           ports:
             - containerPort: 27017
           volumeMounts:
@@ -74,8 +73,8 @@ spec:
           env:
             - name: MONGO_SIDECAR_POD_LABELS
               value: "role=mongo,environment=test"
-            - name: MONGODB_DATABASE
-              value: "admin"
+            - name: MONGO_SSL_ENABLED
+              value: "true"
   volumeClaimTemplates:
   - metadata:
       name: mongo-persistent-storage
